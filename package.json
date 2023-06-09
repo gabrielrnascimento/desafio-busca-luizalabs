@@ -1,0 +1,11 @@
+{
+  "name": "desafio-busca-luizalabs",
+  "version": "1.0.0",
+  "description": "A command-line program to search for a sentence keywords in multiple files",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gabriel Nascimento",
+  "license": "ISC"
+}
