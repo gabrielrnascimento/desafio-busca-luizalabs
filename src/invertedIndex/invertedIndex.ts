@@ -21,4 +21,9 @@ export class InvertedIndex {
       this.index.get(token)?.add(title);
     }
   }
+
+  public find (token: Term): Set<DocumentTitle> {
+    [token] = this.analyzer.transform(token);
+    return new Set<string>(this.index.get(token));
+  }
 }
