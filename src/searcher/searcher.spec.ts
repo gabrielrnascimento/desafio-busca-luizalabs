@@ -3,23 +3,43 @@ import { InvertedIndex } from '../invertedIndex';
 import { mockFiles, mockInvertedIndex } from '../test/mocks';
 import { Searcher } from './searcher';
 
+type SutTypes = {
+  sut: Searcher
+  expectedResult: Record<string, string[]>
+  query: string
+};
+
+const makeSut = (): SutTypes => {
+  const analyzer = new Analyzer();
+  const invertedIndex = new InvertedIndex(analyzer);
+  invertedIndex.index = mockInvertedIndex();
+  const [mockFirstFile, mockSecondFile, mockThirdFile] = mockFiles;
+  const query = mockFirstFile.content;
+  const [specificQueryToken, commonQueryToken, anotherCommonQueryToken] = query.split(' ');
+  const sut = new Searcher(analyzer, invertedIndex);
+
+  const expectedResult = {
+    [specificQueryToken]: [mockFirstFile.title],
+    [commonQueryToken]: [mockFirstFile.title, mockSecondFile.title, mockThirdFile.title],
+    [anotherCommonQueryToken]: [mockFirstFile.title, mockSecondFile.title, mockThirdFile.title]
+  };
+
+  return {
+    sut,
+    expectedResult,
+    query
+  };
+};
+
 describe('Searcher', () => {
   test('should search for documents that contain the provided keywords', () => {
-    const analyzer = new Analyzer();
-    const invertedIndex = new InvertedIndex(analyzer);
-    invertedIndex.index = mockInvertedIndex();
-    const [firstFile, secondFile, thirdFile] = mockFiles;
-    const query = firstFile.content;
-    const [specificTokenFirst, commonTokenMid, commonTokenLast] = query.split(' ');
+    const {
+      sut,
+      expectedResult,
+      query
+    } = makeSut();
 
-    const searcher = new Searcher(analyzer, invertedIndex);
-    const result = searcher.search(query);
-
-    const expectedResult = {
-      [specificTokenFirst]: [firstFile.title],
-      [commonTokenMid]: [firstFile.title, secondFile.title, thirdFile.title],
-      [commonTokenLast]: [firstFile.title, secondFile.title, thirdFile.title]
-    };
+    const result = sut.search(query);
     expect(result).toStrictEqual(expectedResult);
   });
 });
