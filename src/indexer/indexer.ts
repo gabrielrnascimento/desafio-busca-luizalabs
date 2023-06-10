@@ -46,4 +46,15 @@ export class Indexer {
     const convertedIndex = this.convertToJSON();
     await fs.writeFile(filePath, convertedIndex);
   }
+
+  public async load (filePath: string): Promise<void> {
+    const indexJson = await fs.readFile(filePath, 'utf-8');
+    const indexData: Record<string, string[]> = JSON.parse(indexJson);
+
+    const invertedIndex = new InvertedIndex(this.analyzer);
+    for (const [term, documents] of Object.entries(indexData)) {
+      invertedIndex.index.set(term, new Set<string>(documents));
+    }
+    this.invertedIndex = invertedIndex;
+  }
 }
