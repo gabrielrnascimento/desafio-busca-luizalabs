@@ -7,12 +7,32 @@ export class Searcher {
     private readonly index: InvertedIndex
   ) {}
 
-  public search (query: string): Record<string, string[]> {
-    const terms = this.analyzer.transform(query);
-    const results: Record<string, string[]> = {};
-    terms.forEach(term => {
-      results[term] = Array.from(this.index.find(term));
+  private intersection (firstDocuments: Set<string>, secondDocuments: Set<string>): Set<string> {
+    firstDocuments.forEach(document => {
+      if (!secondDocuments.has(document)) {
+        firstDocuments.delete(document);
+      }
     });
-    return results;
+    return firstDocuments;
+  }
+
+  private match (firstDocuments: Set<string>, secondDocuments: Set<string>, operator: string = 'AND'): Set<string> {
+    switch (operator) {
+      default:
+        return this.intersection(firstDocuments, secondDocuments);
+    }
+  }
+
+  public search (query: string): string[] {
+    const terms = this.analyzer.transform(query);
+    let matchingDocuments = this.index.find(terms[0]);
+    if (terms.length > 1) {
+      for (let i = 1; i < terms.length; i++) {
+        const documents = this.index.find(terms[i]);
+        matchingDocuments = this.match(matchingDocuments, documents);
+      }
+    }
+    return [...matchingDocuments]
+    ;
   }
 }
