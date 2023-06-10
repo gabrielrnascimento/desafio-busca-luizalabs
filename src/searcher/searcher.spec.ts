@@ -54,4 +54,16 @@ describe('Searcher', () => {
 
     expect(result).toStrictEqual(expectedResult);
   });
+
+  test('should handle if query has uppercase letters', () => {
+    const {
+      sut,
+      expectedResult,
+      query
+    } = makeSut();
+
+    const result = sut.search(query.toUpperCase());
+
+    expect(result).toStrictEqual(expectedResult);
+  });
 });
