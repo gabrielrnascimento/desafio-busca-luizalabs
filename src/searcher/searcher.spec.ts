@@ -5,7 +5,7 @@ import { Searcher } from './searcher';
 
 type SutTypes = {
   sut: Searcher
-  expectedResult: Record<string, string[]>
+  expectedResult: string[]
   query: string
 };
 
@@ -13,16 +13,11 @@ const makeSut = (): SutTypes => {
   const analyzer = new Analyzer();
   const invertedIndex = new InvertedIndex(analyzer);
   invertedIndex.index = mockInvertedIndex();
-  const [mockFirstFile, mockSecondFile, mockThirdFile] = mockFiles;
-  const query = mockFirstFile.content;
-  const [specificQueryToken, commonQueryToken, anotherCommonQueryToken] = query.split(' ');
+  const [mockFirstFile, mockSecondFile] = mockFiles;
+  const [, , commonToken] = mockFirstFile.content.split(' ');
+  const query = commonToken;
   const sut = new Searcher(analyzer, invertedIndex);
-
-  const expectedResult = {
-    [specificQueryToken]: [mockFirstFile.title],
-    [commonQueryToken]: [mockFirstFile.title, mockSecondFile.title, mockThirdFile.title],
-    [anotherCommonQueryToken]: [mockFirstFile.title, mockSecondFile.title, mockThirdFile.title]
-  };
+  const expectedResult = [mockFirstFile.title, mockSecondFile.title];
 
   return {
     sut,
@@ -32,7 +27,7 @@ const makeSut = (): SutTypes => {
 };
 
 describe('Searcher', () => {
-  test('should search for documents that contain the provided keywords', () => {
+  test('should return documents that contain keywords present in all documents', () => {
     const {
       sut,
       expectedResult,

@@ -6,11 +6,11 @@ export const mockFileContent = 'random content text';
 export const mockFiles = [
   {
     title: 'first-file.txt',
-    content: 'first random content'
+    content: 'first random text'
   },
   {
     title: 'second-file.txt',
-    content: 'second random content'
+    content: 'second random text'
   },
   {
     title: 'third-file.txt',
@@ -36,8 +36,12 @@ export const mockIndex = [
     documents: ['first-file.txt', 'second-file.txt', 'third-file.txt']
   },
   {
+    term: 'text',
+    documents: ['first-file.txt', 'second-file.txt']
+  },
+  {
     term: 'content',
-    documents: ['first-file.txt', 'second-file.txt', 'third-file.txt']
+    documents: ['third-file.txt']
   }
 ];
 
