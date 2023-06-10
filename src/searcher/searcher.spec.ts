@@ -42,4 +42,16 @@ describe('Searcher', () => {
     const result = sut.search(query);
     expect(result).toStrictEqual(expectedResult);
   });
+
+  test('should handle duplicated words in query', () => {
+    const {
+      sut,
+      expectedResult,
+      query
+    } = makeSut();
+
+    const result = sut.search(query + ' ' + query);
+
+    expect(result).toStrictEqual(expectedResult);
+  });
 });
