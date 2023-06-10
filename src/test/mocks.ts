@@ -3,6 +3,21 @@ import { type InvertedIndexType } from '../invertedIndex';
 export const mockDirectoryFiles = ['first-file.txt', 'second-file.txt', 'third-file.txt'];
 export const mockFileContent = 'random content text';
 
+export const mockFiles = [
+  {
+    title: 'first-file.txt',
+    content: 'first random content'
+  },
+  {
+    title: 'second-file.txt',
+    content: 'second random content'
+  },
+  {
+    title: 'third-file.txt',
+    content: 'third random content'
+  }
+];
+
 export const mockIndex = [
   {
     term: 'first',
