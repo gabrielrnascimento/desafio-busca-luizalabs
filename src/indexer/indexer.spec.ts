@@ -3,6 +3,7 @@ import path from 'path';
 import { Analyzer } from '../analyzer';
 import { Indexer } from './indexer';
 import fs from 'fs/promises';
+import { InvertedIndex } from '../invertedIndex';
 
 jest.mock('fs/promises', () => ({
   readdir: jest.fn().mockResolvedValue(mockDirectoryFiles),
@@ -48,5 +49,27 @@ describe('Indexer', () => {
     const mockJson = mockJsonContent();
     const expectedJsonData = JSON.stringify(mockJson, null, 2);
     expect(writeFileSpy).toHaveBeenCalledWith(jsonFileName, expectedJsonData);
+  });
+
+  test('should load index from JSON file', async () => {
+    jest.clearAllMocks();
+
+    const jsonFileName = 'any-file-name.json';
+
+    const readFileSpy = jest.spyOn(fs, 'readFile');
+    readFileSpy.mockResolvedValue(JSON.stringify(mockJsonContent()));
+
+    const { sut } = makeSut();
+    await sut.load(jsonFileName);
+    const invertedIndex = sut.getInvertedIndex();
+    const terms = mockFileContent.split(' ');
+
+    expect(readFileSpy).toHaveBeenCalledWith(jsonFileName, 'utf-8');
+    terms.forEach(term => {
+      const result = invertedIndex.find(term);
+      expect(result).toStrictEqual(new Set<string>(mockDirectoryFiles));
+    });
+    expect(invertedIndex.index.size).toBe(terms.length);
+    expect(invertedIndex).toBeInstanceOf(InvertedIndex);
   });
 });
