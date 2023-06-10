@@ -8,10 +8,19 @@ jest.mock('fs/promises', () => ({
   readFile: jest.fn().mockResolvedValue(mockFileContent)
 }));
 
+type SutTypes = {
+  sut: Indexer
+};
+
+const makeSut = (): SutTypes => {
+  const analyzer = new Analyzer();
+  const sut = new Indexer(analyzer);
+  return { sut };
+};
+
 describe('Indexer', () => {
   test('should insert all documents from specified folder', async () => {
-    const analyzer = new Analyzer();
-    const sut = new Indexer(analyzer);
+    const { sut } = makeSut();
 
     await sut.insertDocuments(path.join('any/folder/path'));
     const invertedIndex = sut.getIndex();
