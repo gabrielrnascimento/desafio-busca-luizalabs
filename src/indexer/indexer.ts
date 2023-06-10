@@ -8,7 +8,15 @@ export class Indexer {
 
   constructor (private readonly analyzer: Analyzer) {}
 
-  public getIndex (): InvertedIndex {
+  public getInvertedIndex (): InvertedIndex {
+    if (!this.invertedIndex) {
+      return this.createInvertedIndex();
+    }
+    return this.invertedIndex;
+  }
+
+  private createInvertedIndex (): InvertedIndex {
+    this.invertedIndex = new InvertedIndex(this.analyzer);
     return this.invertedIndex;
   }
 
@@ -24,5 +32,18 @@ export class Indexer {
       promises.push(contentPromise);
     }
     await Promise.all(promises);
+  }
+
+  private convertToJSON (): string {
+    const indexData: Record<string, string[]> = {};
+    for (const [term, documents] of this.invertedIndex.index) {
+      indexData[term] = Array.from(documents);
+    }
+    return JSON.stringify(indexData, null, 2);
+  }
+
+  public async save (filePath: string): Promise<void> {
+    const convertedIndex = this.convertToJSON();
+    await fs.writeFile(filePath, convertedIndex);
   }
 }
