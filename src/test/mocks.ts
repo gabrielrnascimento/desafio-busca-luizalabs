@@ -1,20 +1,41 @@
 import { type InvertedIndexType } from '../invertedIndex';
 
-export const mockDirectoryFiles = ['random-file.txt', 'another-file.txt'];
+export const mockDirectoryFiles = ['first-file.txt', 'second-file.txt', 'third-file.txt'];
 export const mockFileContent = 'random content text';
+
+export const mockIndex = [
+  {
+    term: 'first',
+    documents: ['first-file.txt']
+  },
+  {
+    term: 'second',
+    documents: ['second-file.txt']
+  },
+  {
+    term: 'third',
+    documents: ['third-file.txt']
+  },
+  {
+    term: 'random',
+    documents: ['first-file.txt', 'second-file.txt', 'third-file.txt']
+  },
+  {
+    term: 'content',
+    documents: ['first-file.txt', 'second-file.txt', 'third-file.txt']
+  }
+];
 
 export const mockJsonContent = (): Record<string, string[]> => {
   const mockJson: Record<string, string[]> = {};
-  const terms = mockFileContent.split(' ');
-  for (const term of terms) {
-    mockJson[term] = mockDirectoryFiles;
-  }
+  mockIndex.forEach(item => {
+    mockJson[item.term] = item.documents;
+  });
   return mockJson;
 };
 
 export const mockInvertedIndex = (): InvertedIndexType => {
-  const mockSet = new Set<string>(mockDirectoryFiles);
   const index = new Map<string, Set<string>>();
-  mockFileContent.split(' ').forEach(term => index.set(term, mockSet));
+  mockIndex.forEach(item => index.set(item.term, new Set(item.documents)));
   return index;
 };

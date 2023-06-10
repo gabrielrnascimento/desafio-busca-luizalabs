@@ -1,4 +1,4 @@
-import { mockDirectoryFiles, mockFileContent, mockInvertedIndex, mockJsonContent } from '../test/mocks';
+import { mockDirectoryFiles, mockFileContent, mockIndex, mockInvertedIndex, mockJsonContent } from '../test/mocks';
 import path from 'path';
 import { Analyzer } from '../analyzer';
 import { Indexer } from './indexer';
@@ -57,17 +57,18 @@ describe('Indexer', () => {
     const jsonFileName = 'any-file-name.json';
 
     const readFileSpy = jest.spyOn(fs, 'readFile');
-    readFileSpy.mockResolvedValue(JSON.stringify(mockJsonContent()));
+    const mockJson = mockJsonContent();
+    readFileSpy.mockResolvedValue(JSON.stringify(mockJson));
 
     const { sut } = makeSut();
     await sut.load(jsonFileName);
     const invertedIndex = sut.getInvertedIndex();
-    const terms = mockFileContent.split(' ');
 
+    const terms = mockIndex.map(item => item.term);
     expect(readFileSpy).toHaveBeenCalledWith(jsonFileName, 'utf-8');
     terms.forEach(term => {
       const result = invertedIndex.find(term);
-      expect(result).toStrictEqual(new Set<string>(mockDirectoryFiles));
+      expect(result).toStrictEqual(new Set<string>(mockJson[term]));
     });
     expect(invertedIndex.index.size).toBe(terms.length);
     expect(invertedIndex).toBeInstanceOf(InvertedIndex);
