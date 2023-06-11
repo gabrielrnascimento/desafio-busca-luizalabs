@@ -32,4 +32,12 @@ describe('CLI', () => {
     expect(consoleErrorSpy).toHaveBeenCalledWith('Insira um termo de busca');
     expect(processExitSpy).toHaveBeenCalledWith(1);
   });
+  test('should display an error if more than 3 arguments are provided', () => {
+    const args = ['node', 'any-file.ts', 'any search term', 'extra argument'];
+    const { sut, consoleErrorSpy, processExitSpy } = makeSut(args);
+    sut.handleInput();
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith('Número excessivo de parâmetros. Forneça apenas um termo de busca');
+    expect(processExitSpy).toHaveBeenCalledWith(1);
+  });
 });
