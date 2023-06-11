@@ -1,5 +1,5 @@
 export class CLI {
-  handleInput (): void {
+  handleInput (): string {
     const args = process.argv;
     const [, , searchTerm] = args;
     if (!searchTerm) {
@@ -10,5 +10,6 @@ export class CLI {
       console.error('Número excessivo de parâmetros. Forneça apenas um termo de busca');
       process.exit(1);
     }
+    return searchTerm;
   }
 }
