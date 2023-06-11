@@ -1,13 +1,33 @@
 import { CLI } from './cli';
 
-describe('CLI', () => {
-  test('should display an error if no search term is provided', () => {
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
-    const processExitSpy = jest.spyOn(process, 'exit').mockImplementation();
+type SutTypes = {
+  sut: CLI
+  consoleErrorSpy: jest.SpyInstance
+  processExitSpy: jest.SpyInstance
+};
 
-    process.argv = ['node', 'any-file.ts'];
-    const cli = new CLI();
-    cli.handleInput();
+const makeSut = (args: string[]): SutTypes => {
+  const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+  const processExitSpy = jest.spyOn(process, 'exit').mockImplementation();
+
+  process.argv = args;
+  const sut = new CLI();
+
+  return {
+    sut,
+    consoleErrorSpy,
+    processExitSpy
+  };
+};
+
+describe('CLI', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  test('should display an error if no search term is provided', () => {
+    const args = ['node', 'any-file.ts'];
+    const { sut, consoleErrorSpy, processExitSpy } = makeSut(args);
+    sut.handleInput();
 
     expect(consoleErrorSpy).toHaveBeenCalledWith('Insira um termo de busca');
     expect(processExitSpy).toHaveBeenCalledWith(1);
