@@ -1,3 +1,4 @@
+import { multipleResultsFirstMessage, multipleResultsSecondMessage, notFoundResultsMessage, searchTermNotProvidedMessage, singleResultFirstMessage, singleResultSecondMessage, tooManyArgumentsProvidedMessage } from '../utils/messages';
 import { type Term, type DocumentTitle } from '../utils/types';
 
 enum ResultsQuantity {
@@ -10,29 +11,29 @@ export class CLI {
     const args = process.argv;
     const [, , searchTerm] = args;
     if (!searchTerm) {
-      console.error('Insira um termo de busca');
+      console.error(searchTermNotProvidedMessage);
       process.exit(1);
     }
     if (args.length > 3) {
-      console.error('Número excessivo de parâmetros. Forneça apenas um termo de busca');
+      console.error(tooManyArgumentsProvidedMessage);
       process.exit(1);
     }
     return searchTerm;
   }
 
   private noResultsFound (searchTerm: Term): void {
-    console.log(`Não foi encontrada nenhuma ocorrência pelo termo "${searchTerm}"`);
+    console.log(notFoundResultsMessage(searchTerm));
   }
 
   private singleResultFound (searchTerm: Term, documents: DocumentTitle[]): void {
-    console.log(`Foi encontrada 1 ocorrência pelo termo "${searchTerm}"`);
-    console.log(`O arquivo que possui "${searchTerm}" é:`);
+    console.log(singleResultFirstMessage(searchTerm));
+    console.log(singleResultSecondMessage(searchTerm));
     console.log(`${documents[0]}`);
   }
 
   private multipleResultFound (searchTerm: Term, documents: DocumentTitle[]): void {
-    console.log(`Foram encontradas ${documents.length} ocorrências pelo termo "${searchTerm}"`);
-    console.log(`Os arquivos que possuem "${searchTerm}" são:`);
+    console.log(multipleResultsFirstMessage(searchTerm, documents));
+    console.log(multipleResultsSecondMessage(searchTerm, documents));
     documents.forEach(document => { console.log(document); });
   }
 

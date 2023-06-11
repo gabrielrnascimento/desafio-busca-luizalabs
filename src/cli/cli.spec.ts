@@ -1,4 +1,5 @@
 import { mockDirectoryFiles } from '../test/mocks';
+import { multipleResultsFirstMessage, multipleResultsSecondMessage, notFoundResultsMessage, searchTermNotProvidedMessage, singleResultFirstMessage, singleResultSecondMessage, tooManyArgumentsProvidedMessage } from '../utils/messages';
 import { type Term } from '../utils/types';
 
 import { CLI } from './cli';
@@ -42,7 +43,7 @@ describe('CLI', () => {
       const { sut, consoleErrorSpy, processExitSpy } = makeSut(args);
       sut.handleInput();
 
-      expect(consoleErrorSpy).toHaveBeenCalledWith('Insira um termo de busca');
+      expect(consoleErrorSpy).toHaveBeenCalledWith(searchTermNotProvidedMessage);
       expect(processExitSpy).toHaveBeenCalledWith(1);
     });
     test('should display an error if more than 3 arguments are provided', () => {
@@ -50,7 +51,7 @@ describe('CLI', () => {
       const { sut, consoleErrorSpy, processExitSpy } = makeSut(args);
       sut.handleInput();
 
-      expect(consoleErrorSpy).toHaveBeenCalledWith('Número excessivo de parâmetros. Forneça apenas um termo de busca');
+      expect(consoleErrorSpy).toHaveBeenCalledWith(tooManyArgumentsProvidedMessage);
       expect(processExitSpy).toHaveBeenCalledWith(1);
     });
 
@@ -68,22 +69,22 @@ describe('CLI', () => {
       const documentsFound: string[] = [];
       const { sut, consoleLogSpy, searchTerm } = makeSut();
       sut.handleOutput(searchTerm, documentsFound);
-      expect(consoleLogSpy).toHaveBeenCalledWith(`Não foi encontrada nenhuma ocorrência pelo termo "${searchTerm}"`);
+      expect(consoleLogSpy).toHaveBeenCalledWith(notFoundResultsMessage(searchTerm));
     });
     test('should display specific messages containg file count and file name in case only one document is provided', () => {
       const documentsFound: string[] = ['only-file.txt'];
       const { sut, consoleLogSpy, searchTerm } = makeSut();
       sut.handleOutput(searchTerm, documentsFound);
-      expect(consoleLogSpy).toHaveBeenCalledWith(`Foi encontrada 1 ocorrência pelo termo "${searchTerm}"`);
-      expect(consoleLogSpy).toHaveBeenCalledWith(`O arquivo que possui "${searchTerm}" é:`);
+      expect(consoleLogSpy).toHaveBeenCalledWith(singleResultFirstMessage(searchTerm));
+      expect(consoleLogSpy).toHaveBeenCalledWith(singleResultSecondMessage(searchTerm));
       expect(consoleLogSpy).toHaveBeenCalledWith(`${documentsFound[0]}`);
     });
     test('should display specific messages containg file count and file names in case multiple documents are provided', () => {
       const { sut, consoleLogSpy, searchTerm } = makeSut();
       const documentsFound: string[] = mockDirectoryFiles;
       sut.handleOutput(searchTerm, documentsFound);
-      expect(consoleLogSpy).toHaveBeenCalledWith(`Foram encontradas ${documentsFound.length} ocorrências pelo termo "${searchTerm}"`);
-      expect(consoleLogSpy).toHaveBeenCalledWith(`Os arquivos que possuem "${searchTerm}" são:`);
+      expect(consoleLogSpy).toHaveBeenCalledWith(multipleResultsFirstMessage(searchTerm, documentsFound));
+      expect(consoleLogSpy).toHaveBeenCalledWith(multipleResultsSecondMessage(searchTerm, documentsFound));
       documentsFound.forEach(document => {
         expect(consoleLogSpy).toHaveBeenCalledWith(document);
       });
