@@ -1,5 +1,6 @@
 import { InvertedIndex } from '../invertedIndex';
 import { type Analyzer } from '../analyzer';
+import { type Term, type DocumentTitle } from '../utils/types';
 import path from 'path';
 import fs from 'fs/promises';
 
@@ -35,7 +36,7 @@ export class Indexer {
   }
 
   private convertToJSON (): string {
-    const indexData: Record<string, string[]> = {};
+    const indexData: Record<Term, DocumentTitle[]> = {};
     for (const [term, documents] of this.invertedIndex.index) {
       indexData[term] = Array.from(documents);
     }
@@ -49,11 +50,11 @@ export class Indexer {
 
   public async load (filePath: string): Promise<void> {
     const indexJson = await fs.readFile(filePath, 'utf-8');
-    const indexData: Record<string, string[]> = JSON.parse(indexJson);
+    const indexData: Record<Term, DocumentTitle[]> = JSON.parse(indexJson);
 
     const invertedIndex = new InvertedIndex(this.analyzer);
     for (const [term, documents] of Object.entries(indexData)) {
-      invertedIndex.index.set(term, new Set<string>(documents));
+      invertedIndex.index.set(term, new Set<DocumentTitle>(documents));
     }
     this.invertedIndex = invertedIndex;
   }

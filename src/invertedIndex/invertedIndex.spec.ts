@@ -1,4 +1,5 @@
 import { Analyzer } from '../analyzer';
+import { type DocumentTitle } from '../utils/types';
 import { InvertedIndex } from './invertedIndex';
 
 type SutTypes = {
@@ -49,6 +50,6 @@ describe('InvertedIndex', () => {
     sut.insert(mockSecondDocument.title, mockSecondDocument.content);
 
     const result = sut.find('CONTENT');
-    expect(result).toStrictEqual(new Set<string>([mockFirstDocument.title, mockSecondDocument.title]));
+    expect(result).toStrictEqual(new Set<DocumentTitle>([mockFirstDocument.title, mockSecondDocument.title]));
   });
 });

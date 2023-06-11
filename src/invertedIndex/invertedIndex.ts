@@ -1,9 +1,5 @@
 import { type Analyzer } from '../analyzer';
-
-type DocumentTitle = string;
-type Term = string;
-
-export type InvertedIndexType = Map<Term, Set<DocumentTitle>>;
+import { type InvertedIndexType, type DocumentTitle, type Term } from '../utils/types';
 
 export class InvertedIndex {
   index: InvertedIndexType;
@@ -12,7 +8,7 @@ export class InvertedIndex {
     this.index = new Map<Term, Set<DocumentTitle>>();
   }
 
-  public insert (title: string, content: string): void {
+  public insert (title: DocumentTitle, content: string): void {
     const tokens = this.analyzer.transform(content);
     for (const token of tokens) {
       if (!this.index.has(token)) {
@@ -24,6 +20,6 @@ export class InvertedIndex {
 
   public find (token: Term): Set<DocumentTitle> {
     [token] = this.analyzer.transform(token);
-    return new Set<string>(this.index.get(token));
+    return new Set<DocumentTitle>(this.index.get(token));
   }
 }

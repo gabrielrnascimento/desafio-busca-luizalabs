@@ -1,4 +1,4 @@
-import { type InvertedIndexType } from '../invertedIndex';
+import { type Term, type DocumentTitle, type InvertedIndexType } from '../utils/types';
 
 export const mockDirectoryFiles = ['c-first-file.txt', 'a-second-file.txt', 'b-third-file.txt'];
 export const mockFileContent = 'random content text';
@@ -45,8 +45,8 @@ export const mockIndex = [
   }
 ];
 
-export const mockJsonContent = (): Record<string, string[]> => {
-  const mockJson: Record<string, string[]> = {};
+export const mockJsonContent = (): Record<Term, DocumentTitle[]> => {
+  const mockJson: Record<Term, DocumentTitle[]> = {};
   mockIndex.forEach(item => {
     mockJson[item.term] = item.documents;
   });
@@ -54,7 +54,7 @@ export const mockJsonContent = (): Record<string, string[]> => {
 };
 
 export const mockInvertedIndex = (): InvertedIndexType => {
-  const index = new Map<string, Set<string>>();
+  const index = new Map<Term, Set<DocumentTitle>>();
   mockIndex.forEach(item => index.set(item.term, new Set(item.documents)));
   return index;
 };

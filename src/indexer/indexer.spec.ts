@@ -4,6 +4,7 @@ import { Analyzer } from '../analyzer';
 import { Indexer } from './indexer';
 import fs from 'fs/promises';
 import { InvertedIndex } from '../invertedIndex';
+import { type DocumentTitle } from '../utils/types';
 
 jest.mock('fs/promises', () => ({
   readdir: jest.fn().mockResolvedValue(mockDirectoryFiles),
@@ -31,7 +32,7 @@ describe('Indexer', () => {
 
     terms.forEach(term => {
       const result = invertedIndex.find(term);
-      expect(result).toStrictEqual(new Set<string>(mockDirectoryFiles));
+      expect(result).toStrictEqual(new Set<DocumentTitle>(mockDirectoryFiles));
     });
     expect(invertedIndex.index.size).toBe(terms.length);
   });
@@ -68,7 +69,7 @@ describe('Indexer', () => {
     expect(readFileSpy).toHaveBeenCalledWith(jsonFileName, 'utf-8');
     terms.forEach(term => {
       const result = invertedIndex.find(term);
-      expect(result).toStrictEqual(new Set<string>(mockJson[term]));
+      expect(result).toStrictEqual(new Set<DocumentTitle>(mockJson[term]));
     });
     expect(invertedIndex.index.size).toBe(terms.length);
     expect(invertedIndex).toBeInstanceOf(InvertedIndex);

@@ -1,5 +1,8 @@
 import { type Analyzer } from '../analyzer';
 import { type InvertedIndex } from '../invertedIndex';
+import { type DocumentTitle } from '../utils/types';
+
+type MatchOperatorType = 'AND';
 
 export class Searcher {
   constructor (
@@ -7,7 +10,7 @@ export class Searcher {
     private readonly index: InvertedIndex
   ) {}
 
-  private intersection (firstDocuments: Set<string>, secondDocuments: Set<string>): Set<string> {
+  private intersection (firstDocuments: Set<DocumentTitle>, secondDocuments: Set<DocumentTitle>): Set<DocumentTitle> {
     firstDocuments.forEach(document => {
       if (!secondDocuments.has(document)) {
         firstDocuments.delete(document);
@@ -16,14 +19,14 @@ export class Searcher {
     return firstDocuments;
   }
 
-  private match (firstDocuments: Set<string>, secondDocuments: Set<string>, operator: string = 'AND'): Set<string> {
+  private match (firstDocuments: Set<DocumentTitle>, secondDocuments: Set<DocumentTitle>, operator: MatchOperatorType = 'AND'): Set<DocumentTitle> {
     switch (operator) {
       default:
         return this.intersection(firstDocuments, secondDocuments);
     }
   }
 
-  public search (query: string): string[] {
+  public search (query: string): DocumentTitle[] {
     const terms = this.analyzer.transform(query);
     let matchingDocuments = this.index.find(terms[0]);
     if (terms.length > 1) {

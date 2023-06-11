@@ -1,6 +1,8 @@
+import { type Term } from '../utils/types';
+
 export class Analyzer {
-  private sentence!: string;
-  private tokens: string[];
+  private sentence!: Term;
+  private tokens: Term[];
 
   constructor () {
     this.tokens = [];
@@ -14,7 +16,7 @@ export class Analyzer {
     this.tokens = this.tokens.map(token => token.toLowerCase());
   }
 
-  public transform (sentence: string, delimiterExpression?: RegExp): string[] {
+  public transform (sentence: Term, delimiterExpression?: RegExp): Term[] {
     this.sentence = sentence;
     this.tokenize(delimiterExpression);
     this.lowercase();
