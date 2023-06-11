@@ -1,4 +1,5 @@
 import { mockDirectoryFiles } from '../test/mocks';
+import { type Term } from '../utils/types';
 
 import { CLI } from './cli';
 
@@ -8,7 +9,7 @@ type SutTypes = {
   processExitSpy: jest.SpyInstance
   consoleLogSpy: jest.SpyInstance
   args: string[]
-  searchTerm: string
+  searchTerm: Term
 };
 
 const makeSut = (args: string[] = ['node', 'any-file.ts', 'any search term']): SutTypes => {
@@ -76,6 +77,16 @@ describe('CLI', () => {
       expect(consoleLogSpy).toHaveBeenCalledWith(`Foi encontrada 1 ocorrência pelo termo "${searchTerm}"`);
       expect(consoleLogSpy).toHaveBeenCalledWith(`O arquivo que possui "${searchTerm}" é:`);
       expect(consoleLogSpy).toHaveBeenCalledWith(`${documentsFound[0]}`);
+    });
+    test('should display specific messages containg file count and file names in case multiple documents are provided', () => {
+      const { sut, consoleLogSpy, searchTerm } = makeSut();
+      const documentsFound: string[] = mockDirectoryFiles;
+      sut.handleOutput(searchTerm, documentsFound);
+      expect(consoleLogSpy).toHaveBeenCalledWith(`Foram encontradas ${documentsFound.length} ocorrências pelo termo "${searchTerm}"`);
+      expect(consoleLogSpy).toHaveBeenCalledWith(`Os arquivos que possuem "${searchTerm}" são:`);
+      documentsFound.forEach(document => {
+        expect(consoleLogSpy).toHaveBeenCalledWith(document);
+      });
     });
   });
 });
