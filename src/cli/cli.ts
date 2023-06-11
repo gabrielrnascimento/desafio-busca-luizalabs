@@ -25,5 +25,10 @@ export class CLI {
       console.log(`O arquivo que possui "${searchTerm}" é:`);
       console.log(`${documents[0]}`);
     }
+    if (documentCount > 1) {
+      console.log(`Foram encontradas ${documentCount} ocorrências pelo termo "${searchTerm}"`);
+      console.log(`Os arquivos que possuem "${searchTerm}" são:`);
+      documents.forEach(document => { console.log(document); });
+    }
   }
 }
