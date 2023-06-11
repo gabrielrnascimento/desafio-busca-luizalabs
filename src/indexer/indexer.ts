@@ -1,8 +1,9 @@
-import { InvertedIndex } from '../invertedIndex';
 import { type Analyzer } from '../analyzer';
+import { InvertedIndex } from '../invertedIndex';
 import { type Term, type DocumentTitle } from '../utils/types';
-import path from 'path';
+
 import fs from 'fs/promises';
+import path from 'path';
 
 export class Indexer {
   private invertedIndex!: InvertedIndex;

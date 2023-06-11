@@ -2,6 +2,7 @@ import { Analyzer } from '../analyzer';
 import { InvertedIndex } from '../invertedIndex';
 import { mockFiles, mockInvertedIndex } from '../test/mocks';
 import { type Term, type DocumentTitle } from '../utils/types';
+
 import { Searcher } from './searcher';
 
 type SutTypes = {

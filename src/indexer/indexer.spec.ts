@@ -1,10 +1,12 @@
-import { mockDirectoryFiles, mockFileContent, mockIndex, mockInvertedIndex, mockJsonContent } from '../test/mocks';
-import path from 'path';
 import { Analyzer } from '../analyzer';
-import { Indexer } from './indexer';
-import fs from 'fs/promises';
 import { InvertedIndex } from '../invertedIndex';
+import { mockDirectoryFiles, mockFileContent, mockIndex, mockInvertedIndex, mockJsonContent } from '../test/mocks';
 import { type DocumentTitle } from '../utils/types';
+
+import { Indexer } from './indexer';
+
+import fs from 'fs/promises';
+import path from 'path';
 
 jest.mock('fs/promises', () => ({
   readdir: jest.fn().mockResolvedValue(mockDirectoryFiles),

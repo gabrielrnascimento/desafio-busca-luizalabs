@@ -9,6 +9,25 @@
     "@typescript-eslint/semi": [ "error", "always" ],
     "@typescript-eslint/consistent-type-definitions": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
-    "@typescript-eslint/restrict-template-expressions": "off"
+    "@typescript-eslint/restrict-template-expressions": "off",
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "parent",
+          "sibling",
+          "external",
+          "builtin",
+          "internal",
+          "index",
+          "unknown"
+        ],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": false
+        }
+      }
+    ]
   }
 }

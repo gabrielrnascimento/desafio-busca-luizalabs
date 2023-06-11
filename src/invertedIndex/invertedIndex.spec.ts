@@ -1,5 +1,6 @@
 import { Analyzer } from '../analyzer';
 import { type DocumentTitle } from '../utils/types';
+
 import { InvertedIndex } from './invertedIndex';
 
 type SutTypes = {
