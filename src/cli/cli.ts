@@ -1,5 +1,7 @@
+import { type Term, type DocumentTitle } from '../utils/types';
+
 export class CLI {
-  handleInput (): string {
+  public handleInput (): string {
     const args = process.argv;
     const [, , searchTerm] = args;
     if (!searchTerm) {
@@ -11,5 +13,12 @@ export class CLI {
       process.exit(1);
     }
     return searchTerm;
+  }
+
+  public handleOutput (searchTerm: Term, documents: DocumentTitle[]): void {
+    const documentCount = documents.length;
+    if (documentCount === 0) {
+      console.log(`Não foi encontrada nenhuma ocorrência pelo termo "${searchTerm}"`);
+    }
   }
 }
