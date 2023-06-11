@@ -32,7 +32,7 @@ export class Searcher {
         matchingDocuments = this.match(matchingDocuments, documents);
       }
     }
-    return [...matchingDocuments]
+    return [...matchingDocuments].sort()
     ;
   }
 }
