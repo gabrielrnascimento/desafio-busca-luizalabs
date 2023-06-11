@@ -61,4 +61,13 @@ describe('Searcher', () => {
 
     expect(result).toStrictEqual(expectedResult);
   });
+
+  test('should return empty array if documents do not match', () => {
+    const {
+      sut
+    } = makeSut();
+
+    const result = sut.search('first second');
+    expect(result).toStrictEqual([]);
+  });
 });
