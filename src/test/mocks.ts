@@ -1,19 +1,19 @@
 import { type InvertedIndexType } from '../invertedIndex';
 
-export const mockDirectoryFiles = ['first-file.txt', 'second-file.txt', 'third-file.txt'];
+export const mockDirectoryFiles = ['c-first-file.txt', 'a-second-file.txt', 'b-third-file.txt'];
 export const mockFileContent = 'random content text';
 
 export const mockFiles = [
   {
-    title: 'first-file.txt',
+    title: 'c-first-file.txt',
     content: 'first random text'
   },
   {
-    title: 'second-file.txt',
+    title: 'a-second-file.txt',
     content: 'second random text'
   },
   {
-    title: 'third-file.txt',
+    title: 'b-third-file.txt',
     content: 'third random content'
   }
 ];
@@ -21,27 +21,27 @@ export const mockFiles = [
 export const mockIndex = [
   {
     term: 'first',
-    documents: ['first-file.txt']
+    documents: ['c-first-file.txt']
   },
   {
     term: 'second',
-    documents: ['second-file.txt']
+    documents: ['a-second-file.txt']
   },
   {
     term: 'third',
-    documents: ['third-file.txt']
+    documents: ['b-third-file.txt']
   },
   {
     term: 'random',
-    documents: ['first-file.txt', 'second-file.txt', 'third-file.txt']
+    documents: ['c-first-file.txt', 'a-second-file.txt', 'b-third-file.txt']
   },
   {
     term: 'text',
-    documents: ['first-file.txt', 'second-file.txt']
+    documents: ['c-first-file.txt', 'a-second-file.txt']
   },
   {
     term: 'content',
-    documents: ['third-file.txt']
+    documents: ['b-third-file.txt']
   }
 ];
 

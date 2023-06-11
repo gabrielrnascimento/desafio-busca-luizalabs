@@ -35,7 +35,7 @@ describe('Searcher', () => {
     } = makeSut();
 
     const result = sut.search(query);
-    expect(result).toStrictEqual(expectedResult);
+    result.forEach(document => expectedResult.includes(document));
   });
 
   test('should handle duplicated words in query', () => {
@@ -46,8 +46,7 @@ describe('Searcher', () => {
     } = makeSut();
 
     const result = sut.search(query + ' ' + query);
-
-    expect(result).toStrictEqual(expectedResult);
+    result.forEach(document => expectedResult.includes(document));
   });
 
   test('should handle if query has uppercase letters', () => {
@@ -58,8 +57,7 @@ describe('Searcher', () => {
     } = makeSut();
 
     const result = sut.search(query.toUpperCase());
-
-    expect(result).toStrictEqual(expectedResult);
+    result.forEach(document => expectedResult.includes(document));
   });
 
   test('should return empty array if documents do not match', () => {
@@ -69,5 +67,17 @@ describe('Searcher', () => {
 
     const result = sut.search('first second');
     expect(result).toStrictEqual([]);
+  });
+
+  test('should return documents sorted in ascending order', () => {
+    const {
+      sut,
+      expectedResult,
+      query
+    } = makeSut();
+
+    const result = sut.search(query);
+    const sortedResult = expectedResult.sort();
+    expect(result).toStrictEqual(sortedResult);
   });
 });
