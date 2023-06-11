@@ -20,5 +20,10 @@ export class CLI {
     if (documentCount === 0) {
       console.log(`Não foi encontrada nenhuma ocorrência pelo termo "${searchTerm}"`);
     }
+    if (documentCount === 1) {
+      console.log(`Foi encontrada 1 ocorrência pelo termo "${searchTerm}"`);
+      console.log(`O arquivo que possui "${searchTerm}" é:`);
+      console.log(`${documents[0]}`);
+    }
   }
 }
