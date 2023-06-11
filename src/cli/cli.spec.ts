@@ -40,4 +40,14 @@ describe('CLI', () => {
     expect(consoleErrorSpy).toHaveBeenCalledWith('Número excessivo de parâmetros. Forneça apenas um termo de busca');
     expect(processExitSpy).toHaveBeenCalledWith(1);
   });
+
+  test('should return search term on success', () => {
+    const args = ['node', 'any-file.ts', 'any search term'];
+    const { sut } = makeSut(args);
+    jest.restoreAllMocks();
+
+    const searchTerm = sut.handleInput();
+
+    expect(searchTerm).toBe(args[2]);
+  });
 });
