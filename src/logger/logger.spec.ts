@@ -7,18 +7,40 @@ const mockTime = new Date('2023-01-01');
 jest.useFakeTimers()
   .setSystemTime(mockTime);
 
+type SutTypes = {
+  sut: Logger
+  appendFileSpy: jest.SpyInstance
+  consoleLogSpy: jest.SpyInstance
+  mockMessage: string
+  mockTimestamp: string
+  mockFilePath: string
+};
+
+const makeSut = (): SutTypes => {
+  const appendFileSpy = jest.spyOn(fs, 'appendFile');
+  const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(jest.fn());
+
+  appendFileSpy.mockImplementation(jest.fn());
+  const mockFilePath = 'any/random/path.log';
+  const sut = new Logger(mockFilePath);
+  const mockMessage = 'any random message';
+  const mockTimestamp = mockTime.toISOString();
+
+  return {
+    sut,
+    appendFileSpy,
+    consoleLogSpy,
+    mockMessage,
+    mockTimestamp,
+    mockFilePath
+  };
+};
+
 describe('Logger', () => {
   test('should log an info message', async () => {
-    const appendFileSpy = jest.spyOn(fs, 'appendFile');
-    const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(jest.fn());
+    const { sut, mockMessage, mockTimestamp, appendFileSpy, mockFilePath, consoleLogSpy } = makeSut();
 
-    appendFileSpy.mockImplementation(jest.fn());
-    const mockFilePath = 'any/random/path.log';
-    const logger = new Logger(mockFilePath);
-    const mockMessage = 'any random message';
-    const mockTimestamp = mockTime.toISOString();
-
-    await logger.info(mockMessage);
+    await sut.info(mockMessage);
 
     const expectedMessage = `[${mockTimestamp}] [${LogLevel.INFO}]: ${mockMessage}\n`;
 
