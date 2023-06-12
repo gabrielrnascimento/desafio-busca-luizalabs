@@ -2,14 +2,16 @@
   "name": "desafio-busca-luizalabs",
   "version": "1.0.0",
   "description": "A command-line program to search for a sentence keywords in multiple files",
-  "main": "src/index.ts",
+  "main": "src/app/search.js",
   "scripts": {
-    "start": "node dist/index.js",
-    "build": "npx tsc",
-    "build-start": "npx tsc && node dist/index.js",
+    "search": "node dist/app/search.js",
+    "build": "rm -rf dist/ && npx tsc",
+    "prepare": "node dist/app/createIndex.js",
+    "build-search": "rm -rf dist/ && npx tsc && node dist/app/search.js",
     "test": "jest",
-    "test:watch": "npm test -- --watch",
-    "test:coverage": "npm test -- --coverage"
+    "watch": "jest --watch",
+    "coverage": "jest --coverage",
+    "clear": "rm -rf dist/"
   },
   "author": "Gabriel Nascimento",
   "license": "ISC",
