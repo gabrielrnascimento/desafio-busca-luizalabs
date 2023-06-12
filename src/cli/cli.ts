@@ -1,3 +1,4 @@
+import { type Logger } from '../logger/logger';
 import { multipleResultsFirstMessage, multipleResultsSecondMessage, notFoundResultsMessage, searchTermNotProvidedMessage, singleResultFirstMessage, singleResultSecondMessage, tooManyArgumentsProvidedMessage } from '../utils/messages';
 import { type Term, type DocumentTitle } from '../utils/types';
 
@@ -7,47 +8,51 @@ enum ResultsQuantity {
 }
 
 export class CLI {
-  public handleInput (): string {
+  constructor (private readonly logger: Logger) {}
+
+  public async handleInput (): Promise<string> {
     const args = process.argv;
     const [, , searchTerm] = args;
     if (!searchTerm) {
-      console.error(searchTermNotProvidedMessage);
+      await this.logger.error(searchTermNotProvidedMessage);
       process.exit(1);
     }
     if (args.length > 3) {
-      console.error(tooManyArgumentsProvidedMessage);
+      await this.logger.error(tooManyArgumentsProvidedMessage);
       process.exit(1);
     }
     return searchTerm;
   }
 
-  private noResultsFound (searchTerm: Term): void {
-    console.log(notFoundResultsMessage(searchTerm));
+  private async noResultsFound (searchTerm: Term): Promise<void> {
+    await this.logger.info(notFoundResultsMessage(searchTerm), true);
   }
 
-  private singleResultFound (searchTerm: Term, documents: DocumentTitle[]): void {
-    console.log(singleResultFirstMessage(searchTerm));
-    console.log(singleResultSecondMessage(searchTerm));
-    console.log(`${documents[0]}`);
+  private async singleResultFound (searchTerm: Term, documents: DocumentTitle[]): Promise<void> {
+    await this.logger.info(singleResultFirstMessage(searchTerm), true);
+    await this.logger.info(singleResultSecondMessage(searchTerm), true);
+    await this.logger.info(`${documents[0]}`, true);
   }
 
-  private multipleResultFound (searchTerm: Term, documents: DocumentTitle[]): void {
-    console.log(multipleResultsFirstMessage(searchTerm, documents));
-    console.log(multipleResultsSecondMessage(searchTerm, documents));
-    documents.forEach(document => { console.log(document); });
+  private async multipleResultFound (searchTerm: Term, documents: DocumentTitle[]): Promise<void> {
+    await this.logger.info(multipleResultsFirstMessage(searchTerm, documents), true);
+    await this.logger.info(multipleResultsSecondMessage(searchTerm, documents), true);
+    for (const document of documents) {
+      await this.logger.info(document, true);
+    }
   }
 
-  public handleOutput (searchTerm: Term, documents: DocumentTitle[]): void {
+  public async handleOutput (searchTerm: Term, documents: DocumentTitle[]): Promise<void> {
     const documentCount = documents.length;
     switch (documentCount) {
       case ResultsQuantity.noResults:
-        this.noResultsFound(searchTerm);
+        await this.noResultsFound(searchTerm);
         break;
       case ResultsQuantity.singleResult:
-        this.singleResultFound(searchTerm, documents);
+        await this.singleResultFound(searchTerm, documents);
         break;
       default:
-        this.multipleResultFound(searchTerm, documents);
+        await this.multipleResultFound(searchTerm, documents);
     }
   }
 }

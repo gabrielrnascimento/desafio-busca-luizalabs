@@ -1,6 +1,8 @@
+/* eslint-disable import/order */
+import { mockDirectoryFiles, mockFileContent, mockIndex, mockInvertedIndex, mockJsonContent } from '../test/mocks';
 import { Analyzer } from '../analyzer';
 import { InvertedIndex } from '../invertedIndex';
-import { mockDirectoryFiles, mockFileContent, mockIndex, mockInvertedIndex, mockJsonContent } from '../test/mocks';
+import { Logger } from '../logger';
 import { type DocumentTitle } from '../utils/types';
 
 import { Indexer } from './indexer';
@@ -11,7 +13,8 @@ import path from 'path';
 jest.mock('fs/promises', () => ({
   readdir: jest.fn().mockResolvedValue(mockDirectoryFiles),
   readFile: jest.fn().mockResolvedValue(mockFileContent),
-  writeFile: jest.fn()
+  writeFile: jest.fn(),
+  appendFile: jest.fn()
 }));
 
 type SutTypes = {
@@ -20,7 +23,8 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const analyzer = new Analyzer();
-  const sut = new Indexer(analyzer);
+  const logger = new Logger('any/file/path.log');
+  const sut = new Indexer(analyzer, logger);
   return { sut };
 };
 
@@ -29,7 +33,7 @@ describe('Indexer', () => {
     const { sut } = makeSut();
 
     await sut.insertDocuments(path.join('any/folder/path'));
-    const invertedIndex = sut.getInvertedIndex();
+    const invertedIndex = await sut.getInvertedIndex();
     const terms = mockFileContent.split(' ');
 
     terms.forEach(term => {
@@ -44,7 +48,7 @@ describe('Indexer', () => {
     writeFileSpy.mockImplementation(jest.fn());
 
     const { sut } = makeSut();
-    const invertedIndex = sut.getInvertedIndex();
+    const invertedIndex = await sut.getInvertedIndex();
     invertedIndex.index = mockInvertedIndex();
     const jsonFileName = 'any-file-name.json';
     await sut.save(jsonFileName);
@@ -65,7 +69,7 @@ describe('Indexer', () => {
 
     const { sut } = makeSut();
     await sut.load(jsonFileName);
-    const invertedIndex = sut.getInvertedIndex();
+    const invertedIndex = await sut.getInvertedIndex();
 
     const terms = mockIndex.map(item => item.term);
     expect(readFileSpy).toHaveBeenCalledWith(jsonFileName, 'utf-8');

@@ -3,3 +3,4 @@ node_modules
 dist
 inverted-index.json
 coverage
+logs.log

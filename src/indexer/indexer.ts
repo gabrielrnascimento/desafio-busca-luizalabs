@@ -1,5 +1,7 @@
 import { type Analyzer } from '../analyzer';
 import { InvertedIndex } from '../invertedIndex';
+import { type Logger } from '../logger';
+import { creatingIndexMessage, finishedIndexation, loadingIndexMessage, savingIndexMessage, startingIndexation } from '../utils/messages';
 import { type Term, type DocumentTitle } from '../utils/types';
 
 import fs from 'fs/promises';
@@ -8,21 +10,26 @@ import path from 'path';
 export class Indexer {
   private invertedIndex!: InvertedIndex;
 
-  constructor (private readonly analyzer: Analyzer) {}
+  constructor (
+    private readonly analyzer: Analyzer,
+    private readonly logger: Logger
+  ) {}
 
-  public getInvertedIndex (): InvertedIndex {
+  public async getInvertedIndex (): Promise<InvertedIndex> {
     if (!this.invertedIndex) {
-      return this.createInvertedIndex();
+      return await this.createInvertedIndex();
     }
     return this.invertedIndex;
   }
 
-  private createInvertedIndex (): InvertedIndex {
+  private async createInvertedIndex (): Promise<InvertedIndex> {
+    await this.logger.info(creatingIndexMessage);
     this.invertedIndex = new InvertedIndex(this.analyzer);
     return this.invertedIndex;
   }
 
   public async insertDocuments (folderPath: string): Promise<void> {
+    await this.logger.info(startingIndexation);
     this.invertedIndex = new InvertedIndex(this.analyzer);
 
     const files = await fs.readdir(folderPath);
@@ -34,6 +41,7 @@ export class Indexer {
       promises.push(contentPromise);
     }
     await Promise.all(promises);
+    await this.logger.info(finishedIndexation);
   }
 
   private convertToJSON (): string {
@@ -45,11 +53,13 @@ export class Indexer {
   }
 
   public async save (filePath: string): Promise<void> {
+    await this.logger.info(savingIndexMessage);
     const convertedIndex = this.convertToJSON();
     await fs.writeFile(filePath, convertedIndex);
   }
 
   public async load (filePath: string): Promise<void> {
+    await this.logger.info(loadingIndexMessage);
     const indexJson = await fs.readFile(filePath, 'utf-8');
     const indexData: Record<Term, DocumentTitle[]> = JSON.parse(indexJson);
 
