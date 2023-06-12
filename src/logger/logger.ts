@@ -3,7 +3,8 @@ import { defaultErrorMessage } from '../utils/messages';
 import fs from 'fs/promises';
 
 export enum LogLevel {
-  INFO = 'INFO'
+  INFO = 'INFO',
+  ERROR = 'ERROR'
 }
 
 export class Logger {
@@ -30,5 +31,10 @@ export class Logger {
     if (shouldConsoleLog) {
       console.log(message);
     }
+  }
+
+  public async error (message: string): Promise<void> {
+    console.error(message);
+    await this.log(LogLevel.ERROR, message);
   }
 }
