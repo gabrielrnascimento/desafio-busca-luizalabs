@@ -1,6 +1,7 @@
 import { Analyzer } from '../analyzer';
 import { InvertedIndex } from '../invertedIndex';
-import { mockFiles, mockInvertedIndex } from '../test/mocks';
+import { Sorter } from '../sorter';
+import { MOCK_TOKENS, mockFiles, mockInvertedIndex, mockSortedFiles } from '../test/mocks';
 import { type Term, type DocumentTitle } from '../utils/types';
 
 import { Searcher } from './searcher';
@@ -13,12 +14,12 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const analyzer = new Analyzer();
+  const sorter = new Sorter();
   const invertedIndex = new InvertedIndex(analyzer);
   invertedIndex.index = mockInvertedIndex();
   const [mockFirstFile, mockSecondFile] = mockFiles;
-  const [, , commonToken] = mockFirstFile.content.split(' ');
-  const query = commonToken;
-  const sut = new Searcher(analyzer, invertedIndex);
+  const query = MOCK_TOKENS.RARE;
+  const sut = new Searcher(analyzer, invertedIndex, sorter);
   const expectedResult = [mockFirstFile.title, mockSecondFile.title];
 
   return {
@@ -74,8 +75,8 @@ describe('Searcher', () => {
   test('should return documents sorted in ascending order', () => {
     const {
       sut,
-      expectedResult,
-      query
+      query,
+      expectedResult
     } = makeSut();
 
     const result = sut.search(query);

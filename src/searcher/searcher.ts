@@ -1,5 +1,6 @@
 import { type Analyzer } from '../analyzer';
 import { type InvertedIndex } from '../invertedIndex';
+import { type Sorter } from '../sorter';
 import { type DocumentTitle } from '../utils/types';
 
 type MatchOperatorType = 'AND';
@@ -7,7 +8,8 @@ type MatchOperatorType = 'AND';
 export class Searcher {
   constructor (
     private readonly analyzer: Analyzer,
-    private readonly index: InvertedIndex
+    private readonly index: InvertedIndex,
+    private readonly sorter: Sorter
   ) {}
 
   private intersection (firstDocuments: Set<DocumentTitle>, secondDocuments: Set<DocumentTitle>): Set<DocumentTitle> {
@@ -35,7 +37,7 @@ export class Searcher {
         matchingDocuments = this.match(matchingDocuments, documents);
       }
     }
-    return [...matchingDocuments].sort()
+    return this.sorter.sort([...matchingDocuments]);
     ;
   }
 }
