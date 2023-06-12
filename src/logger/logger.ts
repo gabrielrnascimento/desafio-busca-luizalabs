@@ -4,7 +4,8 @@ import fs from 'fs/promises';
 
 export enum LogLevel {
   INFO = 'INFO',
-  ERROR = 'ERROR'
+  ERROR = 'ERROR',
+  DEBUG = 'DEBUG'
 }
 
 export class Logger {
@@ -36,5 +37,9 @@ export class Logger {
   public async error (message: string): Promise<void> {
     console.error(message);
     await this.log(LogLevel.ERROR, message);
+  }
+
+  public async debug (message: string): Promise<void> {
+    await this.log(LogLevel.DEBUG, message);
   }
 }
