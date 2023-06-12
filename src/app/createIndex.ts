@@ -2,13 +2,16 @@
 import { Analyzer } from '../analyzer';
 import { Indexer } from '../indexer';
 import { Logger } from '../logger';
-import { MESSAGES } from '../utils/constants';
+import { MESSAGES, NAMES } from '../utils/constants';
 import { dataFolderPath, indexPath, logFilePath, persistenceFolderPath } from '../utils/paths';
 
+import { existsSync } from 'fs';
 import fs from 'fs/promises';
 
 export const createIndex = async (): Promise<void> => {
-  await fs.mkdir(persistenceFolderPath);
+  if (!existsSync(persistenceFolderPath)) {
+    await fs.mkdir(NAMES.PERSISTENCE_FOLDER_NAME);
+  }
   const analyzer = new Analyzer();
   const logger = new Logger(logFilePath);
   const indexer = new Indexer(analyzer, logger);
