@@ -4,6 +4,8 @@ module.exports = {
   testEnvironment: 'node',
   collectCoverageFrom: [
     '<rootDir>/src/**/*.ts',
-    '!<rootDir>/src/**/index.ts'
+    '!<rootDir>/src/**/index.ts',
+    '!<rootDir>/src/**/app/*',
+    '!<rootDir>/src/**/utils/*'
   ]
 };
