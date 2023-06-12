@@ -11,6 +11,7 @@ type SutTypes = {
   sut: Logger
   appendFileSpy: jest.SpyInstance
   consoleLogSpy: jest.SpyInstance
+  consoleErrorSpy: jest.SpyInstance
   mockMessage: string
   mockTimestamp: string
   mockFilePath: string
@@ -19,6 +20,7 @@ type SutTypes = {
 const makeSut = (): SutTypes => {
   const appendFileSpy = jest.spyOn(fs, 'appendFile');
   const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(jest.fn());
+  const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(jest.fn());
 
   appendFileSpy.mockImplementation(jest.fn());
   const mockFilePath = 'any/random/path.log';
@@ -30,6 +32,7 @@ const makeSut = (): SutTypes => {
     sut,
     appendFileSpy,
     consoleLogSpy,
+    consoleErrorSpy,
     mockMessage,
     mockTimestamp,
     mockFilePath
@@ -57,5 +60,16 @@ describe('Logger', () => {
 
     expect(appendFileSpy).toHaveBeenCalledWith(mockFilePath, expectedMessage);
     expect(consoleLogSpy).toHaveBeenCalledWith(mockMessage);
+  });
+
+  test('should log an error message', async () => {
+    const { sut, mockMessage, mockTimestamp, appendFileSpy, mockFilePath, consoleErrorSpy } = makeSut();
+
+    await sut.error(mockMessage);
+
+    const expectedMessage = `[${mockTimestamp}] [${LogLevel.ERROR}]: ${mockMessage}\n`;
+
+    expect(appendFileSpy).toHaveBeenCalledWith(mockFilePath, expectedMessage);
+    expect(consoleErrorSpy).toHaveBeenCalledWith(mockMessage);
   });
 });
