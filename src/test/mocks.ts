@@ -1,19 +1,26 @@
 import { type Term, type DocumentTitle, type InvertedIndexType } from '../utils/types';
 
-export const mockDirectoryFiles = ['c-first-file.txt', 'a-second-file.txt', 'b-third-file.txt'];
+export const mockDirectoryFiles = ['1000-first-file.txt', '1-second-file.txt', '3-third-file.txt'];
+export const mockSortedFiles = ['1-second-file.txt', '3-third-file.txt', '1000-first-file.txt'];
 export const mockFileContent = 'random content text';
+
+export enum MOCK_TOKENS {
+  UNIQUE = 'first',
+  RARE = 'text',
+  COMMON = 'random'
+}
 
 export const mockFiles = [
   {
-    title: 'c-first-file.txt',
+    title: '1000-first-file.txt',
     content: 'first random text'
   },
   {
-    title: 'a-second-file.txt',
+    title: '1-second-file.txt',
     content: 'second random text'
   },
   {
-    title: 'b-third-file.txt',
+    title: '3-third-file.txt',
     content: 'third random content'
   }
 ];
@@ -21,27 +28,27 @@ export const mockFiles = [
 export const mockIndex = [
   {
     term: 'first',
-    documents: ['c-first-file.txt']
+    documents: ['1000-first-file.txt']
   },
   {
     term: 'second',
-    documents: ['a-second-file.txt']
+    documents: ['1-second-file.txt']
   },
   {
     term: 'third',
-    documents: ['b-third-file.txt']
+    documents: ['3-third-file.txt']
   },
   {
     term: 'random',
-    documents: ['c-first-file.txt', 'a-second-file.txt', 'b-third-file.txt']
+    documents: ['1000-first-file.txt', '1-second-file.txt', '3-third-file.txt']
   },
   {
     term: 'text',
-    documents: ['c-first-file.txt', 'a-second-file.txt']
+    documents: ['1000-first-file.txt', '1-second-file.txt']
   },
   {
     term: 'content',
-    documents: ['b-third-file.txt']
+    documents: ['3-third-file.txt']
   }
 ];
 
