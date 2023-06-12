@@ -15,5 +15,5 @@ export const notFoundIndexMessage = 'Index não encontrado.';
 export const foundIndexMessage = 'Index encontrado.';
 export const savingIndexMessage = 'Salvando index.';
 export const defaultErrorMessage = 'Ocorreu um erro: ';
-export const startingIndexation = 'Iniciando inserção de documentos';
-export const finishedIndexation = 'Todos os documentos foram inseridos';
+export const startingIndexation = 'Iniciando inserção de documentos.';
+export const finishedIndexation = 'Todos os documentos foram inseridos.';
