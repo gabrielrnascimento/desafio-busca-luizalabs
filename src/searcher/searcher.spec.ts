@@ -74,13 +74,10 @@ describe('Searcher', () => {
 
   test('should return documents sorted in ascending order', () => {
     const {
-      sut,
-      query,
-      expectedResult
+      sut
     } = makeSut();
 
-    const result = sut.search(query);
-    const sortedResult = expectedResult.sort();
-    expect(result).toStrictEqual(sortedResult);
+    const result = sut.search(MOCK_TOKENS.COMMON);
+    expect(result).toStrictEqual(mockSortedFiles);
   });
 });
