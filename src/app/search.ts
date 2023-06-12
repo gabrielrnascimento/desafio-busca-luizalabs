@@ -3,8 +3,7 @@ import { CLI } from '../cli';
 import { Indexer } from '../indexer';
 import { Logger } from '../logger/logger';
 import { Searcher } from '../searcher';
-import { CONSTANTS } from '../utils/constants';
-import { defaultErrorMessage, foundIndexMessage, notFoundIndexMessage } from '../utils/messages';
+import { MESSAGES, NAMES } from '../utils/constants';
 import { dataFolderPath, indexPath, logFilePath, persistenceFolderPath } from '../utils/paths';
 
 import { existsSync } from 'fs';
@@ -17,14 +16,14 @@ const main = async (): Promise<void> => {
   const analyzer = new Analyzer();
   const indexer = new Indexer(analyzer, logger);
   if (!existsSync(persistenceFolderPath)) {
-    await fs.mkdir(CONSTANTS.PERSISTENCE_FOLDER_NAME);
+    await fs.mkdir(NAMES.PERSISTENCE_FOLDER_NAME);
   }
   if (!existsSync(indexPath)) {
-    await logger.info(notFoundIndexMessage);
+    await logger.info(MESSAGES.NOT_FOUND_INDEX);
     await indexer.insertDocuments(dataFolderPath);
     await indexer.save(indexPath);
   } else {
-    await logger.info(foundIndexMessage);
+    await logger.info(MESSAGES.FOUND_INDEX);
     await indexer.load(indexPath);
   }
   const searcher = new Searcher(analyzer, await indexer.getInvertedIndex());
@@ -33,4 +32,4 @@ const main = async (): Promise<void> => {
 };
 
 main()
-  .catch(err => { console.error(defaultErrorMessage, err); });
+  .catch(err => { console.error(MESSAGES.DEFAULT_ERROR, err); });

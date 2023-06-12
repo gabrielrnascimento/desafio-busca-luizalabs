@@ -1,6 +1,7 @@
 import { Logger } from '../logger/logger';
 import { mockDirectoryFiles } from '../test/mocks';
-import { multipleResultsFirstMessage, multipleResultsSecondMessage, notFoundResultsMessage, searchTermNotProvidedMessage, singleResultFirstMessage, singleResultSecondMessage, tooManyArgumentsProvidedMessage } from '../utils/messages';
+import { MESSAGES } from '../utils/constants';
+import { multipleResultsFirstMessage, multipleResultsSecondMessage, notFoundResultsMessage, singleResultFirstMessage, singleResultSecondMessage } from '../utils/responses';
 import { type Term } from '../utils/types';
 
 import { CLI } from './cli';
@@ -49,7 +50,7 @@ describe('CLI', () => {
       const { sut, consoleErrorSpy, processExitSpy } = makeSut(args);
       await sut.handleInput();
 
-      expect(consoleErrorSpy).toHaveBeenCalledWith(searchTermNotProvidedMessage);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(MESSAGES.SEARCH_TERM_NOT_PROVIDED);
       expect(processExitSpy).toHaveBeenCalledWith(1);
     });
 
@@ -58,7 +59,7 @@ describe('CLI', () => {
       const { sut, consoleErrorSpy, processExitSpy } = makeSut(args);
       await sut.handleInput();
 
-      expect(consoleErrorSpy).toHaveBeenCalledWith(tooManyArgumentsProvidedMessage);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(MESSAGES.TOO_MANY_ARGUMENTS_PROVIDED);
       expect(processExitSpy).toHaveBeenCalledWith(1);
     });
 

@@ -1,4 +1,5 @@
-import { defaultErrorMessage } from '../utils/messages';
+
+import { MESSAGES } from '../utils/constants';
 
 import fs from 'fs/promises';
 
@@ -23,7 +24,7 @@ export class Logger {
     try {
       await fs.appendFile(this.logFilePath, logEntry);
     } catch (error) {
-      console.error(defaultErrorMessage, error);
+      console.error(MESSAGES.DEFAULT_ERROR, error);
     }
   }
 

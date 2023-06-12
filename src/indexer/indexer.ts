@@ -1,7 +1,7 @@
 import { type Analyzer } from '../analyzer';
 import { InvertedIndex } from '../invertedIndex';
 import { type Logger } from '../logger';
-import { creatingIndexMessage, finishedIndexation, loadingIndexMessage, savingIndexMessage, startingIndexation } from '../utils/messages';
+import { MESSAGES } from '../utils/constants';
 import { type Term, type DocumentTitle } from '../utils/types';
 
 import fs from 'fs/promises';
@@ -23,13 +23,13 @@ export class Indexer {
   }
 
   private async createInvertedIndex (): Promise<InvertedIndex> {
-    await this.logger.info(creatingIndexMessage);
+    await this.logger.info(MESSAGES.CREATING_INDEX);
     this.invertedIndex = new InvertedIndex(this.analyzer);
     return this.invertedIndex;
   }
 
   public async insertDocuments (folderPath: string): Promise<void> {
-    await this.logger.info(startingIndexation);
+    await this.logger.info(MESSAGES.STARTING_INDEXATION);
     this.invertedIndex = new InvertedIndex(this.analyzer);
 
     const files = await fs.readdir(folderPath);
@@ -41,7 +41,7 @@ export class Indexer {
       promises.push(contentPromise);
     }
     await Promise.all(promises);
-    await this.logger.info(finishedIndexation);
+    await this.logger.info(MESSAGES.FINISHED_INDEXATION);
   }
 
   private convertToJSON (): string {
@@ -53,13 +53,13 @@ export class Indexer {
   }
 
   public async save (filePath: string): Promise<void> {
-    await this.logger.info(savingIndexMessage);
+    await this.logger.info(MESSAGES.SAVING_INDEX);
     const convertedIndex = this.convertToJSON();
     await fs.writeFile(filePath, convertedIndex);
   }
 
   public async load (filePath: string): Promise<void> {
-    await this.logger.info(loadingIndexMessage);
+    await this.logger.info(MESSAGES.LOADING_INDEX);
     const indexJson = await fs.readFile(filePath, 'utf-8');
     const indexData: Record<Term, DocumentTitle[]> = JSON.parse(indexJson);
 

@@ -1,5 +1,6 @@
 import { type Logger } from '../logger/logger';
-import { multipleResultsFirstMessage, multipleResultsSecondMessage, notFoundResultsMessage, searchTermNotProvidedMessage, singleResultFirstMessage, singleResultSecondMessage, tooManyArgumentsProvidedMessage } from '../utils/messages';
+import { MESSAGES } from '../utils/constants';
+import { multipleResultsFirstMessage, multipleResultsSecondMessage, notFoundResultsMessage, singleResultFirstMessage, singleResultSecondMessage } from '../utils/responses';
 import { type Term, type DocumentTitle } from '../utils/types';
 
 enum ResultsQuantity {
@@ -14,11 +15,11 @@ export class CLI {
     const args = process.argv;
     const [, , searchTerm] = args;
     if (!searchTerm) {
-      await this.logger.error(searchTermNotProvidedMessage);
+      await this.logger.error(MESSAGES.SEARCH_TERM_NOT_PROVIDED);
       process.exit(1);
     }
     if (args.length > 3) {
-      await this.logger.error(tooManyArgumentsProvidedMessage);
+      await this.logger.error(MESSAGES.TOO_MANY_ARGUMENTS_PROVIDED);
       process.exit(1);
     }
     return searchTerm;
