@@ -47,4 +47,15 @@ describe('Logger', () => {
     expect(appendFileSpy).toHaveBeenCalledWith(mockFilePath, expectedMessage);
     expect(consoleLogSpy).not.toHaveBeenCalledWith(mockMessage);
   });
+
+  test('should console.log an info message if parameter is true', async () => {
+    const { sut, mockMessage, mockTimestamp, appendFileSpy, mockFilePath, consoleLogSpy } = makeSut();
+
+    await sut.info(mockMessage, true);
+
+    const expectedMessage = `[${mockTimestamp}] [${LogLevel.INFO}]: ${mockMessage}\n`;
+
+    expect(appendFileSpy).toHaveBeenCalledWith(mockFilePath, expectedMessage);
+    expect(consoleLogSpy).toHaveBeenCalledWith(mockMessage);
+  });
 });
