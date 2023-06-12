@@ -2,19 +2,20 @@
 import { Analyzer } from '../analyzer';
 import { Indexer } from '../indexer';
 import { Logger } from '../logger';
-import { CONSTANTS } from '../utils/constants';
 import { createdIndexMessage, creatingIndexMessage, defaultErrorMessage } from '../utils/messages';
+import { dataFolderPath, indexPath, logFilePath, persistenceFolderPath } from '../utils/paths';
 
-import path from 'path';
+import fs from 'fs/promises';
 
 export const createIndex = async (): Promise<void> => {
+  await fs.mkdir(persistenceFolderPath);
   const analyzer = new Analyzer();
-  const logger = new Logger(path.join(process.cwd(), CONSTANTS.LOG_FILE_PATH));
+  const logger = new Logger(logFilePath);
   const indexer = new Indexer(analyzer, logger);
-  await logger.info(creatingIndexMessage);
-  await indexer.insertDocuments(path.join(process.cwd(), CONSTANTS.DATA_FOLDER_PATH));
-  await indexer.save(CONSTANTS.INDEX_FILE_PATH);
-  await logger.info(createdIndexMessage);
+  await logger.info(creatingIndexMessage, true);
+  await indexer.insertDocuments(dataFolderPath);
+  await indexer.save(indexPath);
+  await logger.info(createdIndexMessage, true);
 };
 
 createIndex()

@@ -1,5 +1,6 @@
 export enum CONSTANTS {
-  LOG_FILE_PATH = 'logs.log',
-  DATA_FOLDER_PATH = 'data',
-  INDEX_FILE_PATH = 'inverted-index.json'
+  DATA_FOLDER_NAME = 'data',
+  PERSISTENCE_FOLDER_NAME = 'persistence',
+  LOG_FILE_NAME = 'logs.log',
+  INDEX_FILE_NAME = 'inverted-index.json'
 }

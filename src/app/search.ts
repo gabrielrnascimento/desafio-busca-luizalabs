@@ -5,21 +5,23 @@ import { Logger } from '../logger/logger';
 import { Searcher } from '../searcher';
 import { CONSTANTS } from '../utils/constants';
 import { defaultErrorMessage, foundIndexMessage, notFoundIndexMessage } from '../utils/messages';
+import { dataFolderPath, indexPath, logFilePath, persistenceFolderPath } from '../utils/paths';
 
 import { existsSync } from 'fs';
-import path from 'path';
-
-const indexPath = path.join(process.cwd(), CONSTANTS.INDEX_FILE_PATH);
+import fs from 'fs/promises';
 
 const main = async (): Promise<void> => {
-  const logger = new Logger(path.join(process.cwd(), CONSTANTS.LOG_FILE_PATH));
+  const logger = new Logger(logFilePath);
   const cli = new CLI(logger);
   const searchTerm = await cli.handleInput();
   const analyzer = new Analyzer();
   const indexer = new Indexer(analyzer, logger);
+  if (!existsSync(persistenceFolderPath)) {
+    await fs.mkdir(CONSTANTS.PERSISTENCE_FOLDER_NAME);
+  }
   if (!existsSync(indexPath)) {
     await logger.info(notFoundIndexMessage);
-    await indexer.insertDocuments(path.join(process.cwd(), CONSTANTS.DATA_FOLDER_PATH));
+    await indexer.insertDocuments(dataFolderPath);
     await indexer.save(indexPath);
   } else {
     await logger.info(foundIndexMessage);
