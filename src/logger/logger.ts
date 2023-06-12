@@ -25,7 +25,10 @@ export class Logger {
     }
   }
 
-  public async info (message: string): Promise<void> {
+  public async info (message: string, shouldConsoleLog: boolean = false): Promise<void> {
     await this.log(LogLevel.INFO, message);
+    if (shouldConsoleLog) {
+      console.log(message);
+    }
   }
 }
