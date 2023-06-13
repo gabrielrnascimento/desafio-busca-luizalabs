@@ -1,0 +1,11 @@
+version: "3"
+services:
+  search:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: desafio-luizalabs
+    container_name: desafio
+    volumes:
+      - ./data:/usr/desafio-busca-luizalabs/data
+      - ./persistence:/usr/desafio-busca-luizalabs/persistence
