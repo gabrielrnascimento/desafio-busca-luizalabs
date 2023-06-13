@@ -1,6 +1,6 @@
 import { Logger } from '../logger/logger';
 import { mockDirectoryFiles } from '../test/mocks';
-import { MESSAGES } from '../utils/constants';
+import { MESSAGES, NAMES } from '../utils/constants';
 import { multipleResultsFirstMessage, multipleResultsSecondMessage, notFoundResultsMessage, singleResultFirstMessage, singleResultSecondMessage } from '../utils/responses';
 import { type Term } from '../utils/types';
 
@@ -85,7 +85,7 @@ describe('CLI', () => {
       await sut.handleOutput(searchTerm, documentsFound);
       expect(consoleLogSpy).toHaveBeenCalledWith(singleResultFirstMessage(searchTerm));
       expect(consoleLogSpy).toHaveBeenCalledWith(singleResultSecondMessage(searchTerm));
-      expect(consoleLogSpy).toHaveBeenCalledWith(`${documentsFound[0]}`);
+      expect(consoleLogSpy).toHaveBeenCalledWith(`${NAMES.DATA_FOLDER_NAME}/${documentsFound[0]}`);
     });
     test('should display specific messages containg file count and file names in case multiple documents are provided', async () => {
       const { sut, consoleLogSpy, searchTerm } = makeSut();
@@ -94,7 +94,7 @@ describe('CLI', () => {
       expect(consoleLogSpy).toHaveBeenCalledWith(multipleResultsFirstMessage(searchTerm, documentsFound));
       expect(consoleLogSpy).toHaveBeenCalledWith(multipleResultsSecondMessage(searchTerm, documentsFound));
       documentsFound.forEach(document => {
-        expect(consoleLogSpy).toHaveBeenCalledWith(document);
+        expect(consoleLogSpy).toHaveBeenCalledWith(`${NAMES.DATA_FOLDER_NAME}/${document}`);
       });
     });
   });

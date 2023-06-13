@@ -1,5 +1,5 @@
 import { type Logger } from '../logger/logger';
-import { MESSAGES } from '../utils/constants';
+import { MESSAGES, NAMES } from '../utils/constants';
 import { multipleResultsFirstMessage, multipleResultsSecondMessage, notFoundResultsMessage, singleResultFirstMessage, singleResultSecondMessage } from '../utils/responses';
 import { type Term, type DocumentTitle } from '../utils/types';
 
@@ -32,14 +32,14 @@ export class CLI {
   private async singleResultFound (searchTerm: Term, documents: DocumentTitle[]): Promise<void> {
     await this.logger.info(singleResultFirstMessage(searchTerm), true);
     await this.logger.info(singleResultSecondMessage(searchTerm), true);
-    await this.logger.info(`${documents[0]}`, true);
+    await this.logger.info(`${NAMES.DATA_FOLDER_NAME}/${documents[0]}`, true);
   }
 
   private async multipleResultFound (searchTerm: Term, documents: DocumentTitle[]): Promise<void> {
     await this.logger.info(multipleResultsFirstMessage(searchTerm, documents), true);
     await this.logger.info(multipleResultsSecondMessage(searchTerm, documents), true);
     for (const document of documents) {
-      await this.logger.info(document, true);
+      await this.logger.info(`${NAMES.DATA_FOLDER_NAME}/${document}`, true);
     }
   }
 
