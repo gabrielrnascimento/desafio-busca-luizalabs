@@ -53,4 +53,50 @@ describe('InvertedIndex', () => {
     const result = sut.find('CONTENT');
     expect(result).toStrictEqual(new Set<DocumentTitle>([mockFirstDocument.title, mockSecondDocument.title]));
   });
+
+  test('should add content removing special characters', () => {
+    const { sut } = makeSut();
+
+    const mockFirstDocument = {
+      title: 'any_title.txt',
+      content: 'any? random: content'
+    };
+
+    const mockSecondDocument = {
+      title: 'another_title.txt',
+      content: 'any! random,content'
+    };
+
+    sut.insert(mockFirstDocument.title, mockFirstDocument.content);
+    sut.insert(mockSecondDocument.title, mockSecondDocument.content);
+
+    const randomResult = sut.find('random');
+    expect(randomResult).toStrictEqual(new Set<DocumentTitle>([mockFirstDocument.title, mockSecondDocument.title]));
+
+    const anyResult = sut.find('any');
+    expect(anyResult).toStrictEqual(new Set<DocumentTitle>([mockFirstDocument.title, mockSecondDocument.title]));
+  });
+
+  test('should add content ignoring hyphens and underscores', () => {
+    const { sut } = makeSut();
+
+    const mockFirstDocument = {
+      title: 'any_title.txt',
+      content: 'any? random_content'
+    };
+
+    const mockSecondDocument = {
+      title: 'another_title.txt',
+      content: 'any-random,content'
+    };
+
+    sut.insert(mockFirstDocument.title, mockFirstDocument.content);
+    sut.insert(mockSecondDocument.title, mockSecondDocument.content);
+
+    const anyRandomResult = sut.find('any-random');
+    expect(anyRandomResult).toStrictEqual(new Set<DocumentTitle>([mockSecondDocument.title]));
+
+    const randomContentResult = sut.find('random_content');
+    expect(randomContentResult).toStrictEqual(new Set<DocumentTitle>([mockFirstDocument.title]));
+  });
 });
