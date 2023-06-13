@@ -9,7 +9,7 @@ export class InvertedIndex {
   }
 
   public insert (title: DocumentTitle, content: string): void {
-    const tokens = this.analyzer.transform(content);
+    const tokens = this.analyzer.transform(content, /[^\w\s-]+/g);
     for (const token of tokens) {
       if (!this.index.has(token)) {
         this.index.set(token, new Set<DocumentTitle>());
