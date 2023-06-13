@@ -8,19 +8,26 @@ export class Analyzer {
     this.tokens = [];
   }
 
-  private tokenize (expression: RegExp = /\s+/): void {
-    this.tokens.push(...this.sentence.split(expression));
+  private tokenize (): void {
+    this.tokens.push(...this.sentence.split(/\s+/));
   }
 
   private lowercase (): void {
     this.tokens = this.tokens.map(token => token.toLowerCase());
   }
 
-  public transform (sentence: Term, delimiterExpression?: RegExp): Term[] {
+  private filter (expression: RegExp): void {
+    this.sentence = this.sentence.replace(expression, ' ');
+  }
+
+  public transform (sentence: Term, filterExpression?: RegExp): Term[] {
     this.sentence = sentence;
-    this.tokenize(delimiterExpression);
+    if (filterExpression) {
+      this.filter(filterExpression);
+    }
+    this.tokenize();
     this.lowercase();
-    const result = this.tokens;
+    const result = this.tokens.filter(token => Boolean(token));
     this.tokens = [];
     return result;
   }
