@@ -6,6 +6,7 @@ services:
       dockerfile: Dockerfile
     image: desafio-luizalabs
     container_name: desafio
+    entrypoint: /usr/desafio-busca-luizalabs/entrypoint.sh
     volumes:
       - ./data:/usr/desafio-busca-luizalabs/data
       - ./persistence:/usr/desafio-busca-luizalabs/persistence

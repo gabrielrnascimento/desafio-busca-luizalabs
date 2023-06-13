@@ -6,6 +6,7 @@
   "scripts": {
     "search": "node dist/app/search.js",
     "build": "npx tsc",
+    "preinstall": "rm -rf persistence/",
     "postinstall": "npm run build && node dist/app/createIndex.js",
     "generate-index": "node dist/app/createIndex.js",
     "build-search": "npm run build && node dist/app/search.js",
