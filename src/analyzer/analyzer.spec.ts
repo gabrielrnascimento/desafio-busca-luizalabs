@@ -7,11 +7,11 @@ describe('Analyzer', () => {
     expect(tokens).toStrictEqual(['random', 'words,', 'for', 'random', 'sentence_example']);
   });
 
-  test('should tokenize using RegExp expression if passed', () => {
+  test('should filter characters using RegExp expression if passed', () => {
     const analyzer = new Analyzer();
-    const expression = /\W+|_/;
-    const tokens = analyzer.transform('random words, for random sentence_example', expression);
-    expect(tokens).toStrictEqual(['random', 'words', 'for', 'random', 'sentence', 'example']);
+    const filterExpression = /[^\w\s-]|[-_]/g;
+    const tokens = analyzer.transform('random? words, for: random-sentence! another_word example.', filterExpression);
+    expect(tokens).toStrictEqual(['random', 'words', 'for', 'random', 'sentence', 'another', 'word', 'example']);
   });
 
   test('should lowercase tokens', () => {
